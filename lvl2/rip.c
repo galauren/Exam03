@@ -1,54 +1,45 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   rip.c                                              :+:      :+:    :+:   */
+/*   rip2.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: galauren <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/24 22:47:40 by galauren          #+#    #+#             */
-/*   Updated: 2025/07/24 23:45:04 by galauren         ###   ########.fr       */
+/*   Created: 2025/07/25 00:40:55 by galauren          #+#    #+#             */
+/*   Updated: 2025/07/25 00:47:37 by galauren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 
-void	recursive_identify_parenthesis(char **str, int open, int index, int open_index, int *over)
+int	recursive_identify_parenthesis(char *str, int index)
 {
-	if (!*(str)[index])
+	int balance;
+
+	if (!str[index])
+		return (0);
+	balance = recursive_identify_parenthesis(str, index + 1);
+	if (str[index] == ')')
+		return (balance + 1);
+	else if (str[index] == '(')
 	{
-		if (open && *over != 1)
-			*(str)[open_index] = ' ';
-		return ;
-	}
-	if (*(str)[index] == '(')
-	{
-		recursive_identify_parenthesis(str, 1, index + 1, index, --*over);
-	}
-	else if (*(str)[index] == ')')
-	{
-		if (open)
-			recursive_identify_parenthesis(str, 1, index + 1, open_index, ++*over);	
+		if (balance == 0)
+			str[index] = ' ';
 		else
-		{
-			*(str)[index] = ' ';
-			return ;
-		}
-			
+			return (balance - 1);
 	}
-	else
-		recursive_identify_parenthesis(str, open, index + 1, over);
+	return (balance);
 }
 
 void	rip(char *str)
 {
-	int	over;
-
-	over = 1;
-	recursive_identify_parenthesis(&str, 0, 0, 0, &over);
+	recursive_identify_parenthesis(str, 0);
 	puts(str);
 }
 
-int main()
+int main(int ac, char **av)
 {
-	int i;
+	if (ac != 2)
+		return (-1);
+	rip(av[1]);
 }
